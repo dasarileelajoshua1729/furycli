@@ -1,0 +1,2 @@
+[console_scripts]
+furycli = furycli_pkg.__main__:app

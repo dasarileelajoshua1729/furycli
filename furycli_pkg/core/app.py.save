@@ -1,0 +1,36 @@
+__version__  == "1.0.0"
+import typer
+from rich import print
+import os
+import importlib
+
+app = typer.Typer()
+
+# sub apps (safe create BEFORE loading plugins)
+file_app = typer.Typer()
+tool_app = typer.Typer()
+
+app.add_typer(file_app, name="file")
+app.add_typer(tool_app, name="tool")
+
+
+def load_plugins():
+    base_path = os.path.dirname(__file__)
+    commands_path = os.path.join(base_path, "..", "commands")
+
+    for file in os.listdir(commands_path):
+        if file.endswith(".py") and file != "__init__.py":
+            module_name = f"furycli_pkg.commands.{file[:-3]}"
+            importlib.import_module(module_name)
+
+load_plugins()
+
+
+@app.command()
+def start():
+    print("[green]🔥 FuryCLI running[/green]")
+
+
+@app.command()
+def hello():
+    print("[blue]Hello from FuryCLI 👋[/blue]")
